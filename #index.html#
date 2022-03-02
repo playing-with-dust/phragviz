@@ -1,0 +1,300 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name='viewport' content='width=device-width'>
+    <title>Phragmén Explorable</title>
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+  </head>
+  
+  <body>
+    <h1>How Sequential Phragmén voting works</h1>
+
+    <p>This is an <a href="https://explorabl.es/">explorable explanation</a> of the Sequential <a href="https://en.wikipedia.org/wiki/Lars_Edvard_Phragm%C3%A9n">Phragmén voting system</a> (invented in the 1890s) currently used on <a href="http://kusama.network">Kusama</a> and <a href="http://polkadot.network">Polkadot's</a> on-chain elections. You can modify these examples - create candidates and voters, adjust their voting stake (drag left and right or type) and add and delete votes to see how it affects the results.</p>
+
+    <p>This voting system is used for nominators to elect validators, as well as for the community to carry out council elections and referendums.</p>
+    
+    <hr>
+
+    <h2>Example 1: One token = one vote</h2>
+    <a href="https://wiki.polkadot.network/docs/en/learn-phragmen">(example 1 from the Polkadot Wiki)</a>
+    <p>
+      A simple example with 1 token per voter, with three candidates
+      to elect out of four. As you would expect the candidates with
+      the most votes (and tokens backing them) get elected. The
+      process is an iterative one, each candidate is selected in a
+      different 'round' of the election process, this is the number
+      displayed in the elected column.
+    </p>
+      
+    <div id="container" class="container">
+      <div class="voters">
+	<h3>voters</h3>
+	<table>
+	  <thead>
+	    <tr>
+	      <th>name</th>
+	      <th>stake</th>
+	      <th>votes</th>
+	      <th>delete</th>
+	    </tr>
+	  </thead>
+	  <tbody id="one_voters">
+	  </tbody>
+	</table>
+	<button id="one_new_voter" class="new-button">add voter</button>
+      </div>    
+      <div class="candidates">
+	<h3>candidates</h3>
+	<table>
+	  <thead>
+	    <tr>
+	      <th>name</th>
+	      <th>approval</th>
+ 	      <th>vote</th>
+ 	      <th></th>
+	      <th>support</th>
+	      <th>elected</th>
+	      <th>delete</th>
+	    </tr>
+	  </thead>
+	  <tbody id="one_candidates">
+	  </tbody>
+	</table>      
+	<button id="one_new_candidate" class="new-button">add candidate</button>
+	<p>number to elect: <input id="one_num_rounds" type="number" value=2></input></p>
+      </div>
+    </div>
+
+    <hr>
+
+    <h2>Example 2: Token weightings</h2>
+    <a href="https://wiki.polkadot.network/docs/en/learn-phragmen">(example 2 from the Polkadot Wiki)</a>
+    <p>
+      The problem with having voters associated with accounts is that
+      one person can control many hundreds of accounts, or a single
+      account may indeed be owned by multiple people - there is no way
+      (currently) to know this. Instead the concept is that the people
+      with the most to lose (the highest amount of tokens) are given
+      the most power - voters need to temporarily reserve some of
+      their tokens to weight their voting. It of course comes with
+      it's own problems, and it is acknowledged that the power of large
+      stakeholders needs to be limited. We'll see in later examples
+      how Phragmén voting as applied in Polkadot and Kusama tackles
+      this in a couple of ways.
+    <p>
+    
+    <p>
+      Here we see some voters with different stake amounts. The
+      candidates with the highest stakes backing them get elected -
+      but this doesn't always match the vote share. Try changing the
+      stakes to see how it effects the election.
+    </p>
+    
+    <div id="container" class="container">
+      <div class="voters">
+	<h3>voters</h3>
+	<table>
+	  <thead>
+	    <tr>
+	      <th>name</th>
+	      <th>stake</th>
+	      <th>votes</th>
+	      <th>delete</th>
+	    </tr>
+	  </thead>
+	  <tbody id="two_voters">
+	  </tbody>
+	</table>
+	<button id="two_new_voter" class="new-button">add voter</button>
+      </div>    
+      <div class="candidates">
+	<h3>candidates</h3>
+	<table>
+	  <thead>
+	    <tr>
+	      <th>name</th>
+	      <th>approval</th>
+	      <th>vote</th>
+ 	      <th></th>
+	      <th>support</th>
+	      <th>elected</th>
+	      <th>delete</th>
+	    </tr>
+	  </thead>
+	  <tbody id="two_candidates">
+	  </tbody>
+	</table>      
+	<button id="two_new_candidate" class="new-button">add candidate</button>
+	<p>number to elect: <input id="two_num_rounds" type="number" value=2></input></p>
+      </div>
+    </div>
+
+    <hr>
+    
+    <h2>Example 3: Sometimes the stake is out voted</h2>
+
+    <p>
+      There is more to Phragmén voting than simply ordering candidates
+      by the amount of tokens backing them. In this example we see
+      some of the intermediate calculations (called voter 'load' and
+      candidate 'scores') which change for each round of the election
+      process.
+    </p>
+
+    <p>
+      With loads and scores the smaller the number the better, as it's
+      the candidate with the <i>lowest score</i> in each round that
+      gets
+      elected. The <a href="https://wiki.polkadot.network/docs/en/learn-phragmen">Polkadot
+      wiki</a> has more detail on how they are calculated which I'm
+      not going to go into here - we are interested in the effect they
+      have on the results.
+    </p>
+    
+    <p>
+      In a manner of speaking, the loads and scores redistribute
+      'success' between voters. Each time one of your chosen
+      candidates is elected in a round, your voter load is increased
+      for all the subsequent rounds. As this number increases, it
+      reduces the influence of your votes on the candidate scores. We
+      can see below a case where a candidate with a large approval
+      stake loses out to one with a less tokens backing them - because
+      the voters that chose it were boosted, as they hadn't had any
+      other candidates selected.
+    </p>
+    
+    <p>
+      Try changing the number to elect in this example to 3 - you can
+      see the support for candidate 2 halves as the large stake from
+      voter 1 has to be shared between candidates 2 and 3 if they are
+      both succesful.
+    </p>
+    
+    <div id="container" class="container">
+      <div class="voters">
+	<h3>voters</h3>
+	<table>
+	  <thead>
+	    <tr>
+	      <th>name</th>
+	      <th>stake</th>
+	      <th>load per round</th>
+	      <th>support</th>
+	      <th>votes</th>
+	      <th>delete</th>
+	    </tr>
+	  </thead>
+	  <tbody id="three_voters">
+	  </tbody>
+	</table>
+	<button id="three_new_voter" class="new-button">add voter</button>
+      </div>    
+      <div class="candidates">
+	<h3>candidates</h3>
+	<table>
+	  <thead>
+	    <tr>
+	      <th>name</th>
+	      <th>approval</th>
+	      <th>vote</th>
+ 	      <th></th>
+	      <th>support</th>
+	      <th>score per round</th>
+	      <th>elected</th>
+	      <th>delete</th>
+	    </tr>
+	  </thead>
+	  <tbody id="three_candidates">
+	  </tbody>
+	</table>      
+	<button id="three_new_candidate" class="new-button">add candidate</button>
+	<p>number to elect: <input id="three_num_rounds" type="number" value=2></input></p>
+      </div>
+    </div>
+
+    <hr>
+
+    <h2>Example 4: Voter conviction</h2>
+
+    <p>
+      Another aspect that evens the playing field with regard to large
+      stakeholders is to allow people to trade brute force "deep
+      pockets" for time, using a <i>conviction</i> parameter. This is
+      used only for referenda; and allows voters to lock their voting
+      tokens for longer - multiplyingies their stake up to six times.
+    </p>
+
+    <p>
+      It's important to note that tokens locked for voting can be used
+      for other things at the same time, other votes, staking, locked
+      for setting on-chain identity for example. They just can't be
+      moved to another account during the this time.
+    </p>
+    
+<!--    <p>
+      The two colour circles below show the effect of the conviction
+      on the stake, with the darker pink representing the final
+      multiplied amount for each candidate (which can be smaller if
+      the 0.1x conviction is used).
+    </p>
+-->  
+    <div id="container" class="container">
+      <div class="voters">
+	<h3>voters</h3>
+	<table>
+	  <thead>
+	    <tr>
+	      <th>name</th>
+	      <th>stake</th>
+	      <th>conviction</th>
+	      <th>load per round</th>
+	      <th>votes</th>
+	      <th>delete</th>
+	    </tr>
+	  </thead>
+	  <tbody id="four_voters">
+	  </tbody>
+	</table>
+	<button id="four_new_voter" class="new-button">add voter</button>
+      </div>    
+      <div class="candidates">
+	<h3>candidates</h3>
+	<table>
+	  <thead>
+	    <tr>
+	      <th>name</th>
+	      <th>stake</th>
+	      <th>vote</th>
+	      <th></th>
+	      <th>support</th>
+	      <th>score per round</th>
+	      <th>elected</th>
+	      <th>delete</th>
+	    </tr>
+	  </thead>
+	  <tbody id="four_candidates">
+	  </tbody>
+	</table>      
+	<button id="four_new_candidate" class="new-button">add candidate</button>
+	<p>number to elect: <input id="four_num_rounds" type="number" value=2></input></p>
+      </div>
+    </div>
+
+    <script src="bundle.js"></script>
+
+    <p>
+      Todo:
+      <ul>
+	<li>Figure out ordered votes for council elections</li>
+	<li>Import on-chain election results</li>
+      </ul>
+      <a href="https://github.com/playing-with-dust/phragviz">GPL3 source code</a>
+      <br>
+      <a href="https://playing-with-dust.github.io/">playing with dust</a>
+    <p style="overflow:hidden;">
+      <small>Tips welcome! FLzgz4qt5foC1DXRHQQwC2cLwu39eGkhx93x7UsM5uniBvM</small>
+    </p>
+  </body>
+</html>
